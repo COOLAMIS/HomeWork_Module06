@@ -1,9 +1,30 @@
 import os
-from Normalize import normalize
+#from Normalize import normalize
 import zipfile, shutil
 
-def normalize(text):
-    return text
+CYRILLIC_SYMBOLS = "абвгґдеёєжзиіїйклмнопрстуфхцчшщъыьэюя"
+TRANSLATION = ("a", "b", "v", "h", "g", "d", "e", "e", "ie" "zh", "z",
+               "y", "i", "yi", "y", "j", "k", "l", "m", "n", "o", "p",
+               "r", "s", "t", "u", "f", "kh", "ts", "ch", "sh", "shch",
+               "", "y", "", "e", "yu", "ya")
+
+BAD_SYMBOLS = ("%", "*", " ", "-")
+
+TRANS = {}
+for c, t in zip(list(CYRILLIC_SYMBOLS), TRANSLATION):
+    TRANS[ord(c)] = t
+    TRANS[ord(c.upper())] = t.upper()
+
+for i in BAD_SYMBOLS:
+    TRANS[ord(i)] = "_"
+
+
+def normalize(name: str) -> str:
+    trans_name = name.translate(TRANS)
+    return trans_name
+
+
+
 
 dict_file_extension = {'picure': ['JPEG', 'PNG', 'JPG', 'SVG'],
                        'video': ['AVI', 'MP4', 'MOV', 'MKV'],
