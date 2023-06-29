@@ -1,4 +1,5 @@
 import os
+import sys
 #from Normalize import normalize
 import zipfile, shutil
 
@@ -48,13 +49,13 @@ def move_data(path_i, root_path, name_category):
     os.replace(path_i, file_move_name)
     extension = extension.upper()
     if extension in ('ZIP', 'GZ', 'TAR'):
-        try:
-            #shutil.unpack_archive(path_i, file_move_name)
-            zip_path_i = zipfile.ZipFile(path_i)
-            zip_path_i.extractall(target_dir.join(file_name))
-            zip_path_i.close()
-        except FileNotFoundError:
-            print('archive is bad')
+        # try:
+        shutil.unpack_archive(file_move_name, os.path.join(target_dir, file_name))
+        #     zip_path_i = zipfile.ZipFile(path_i)
+        #     zip_path_i.extractall(target_dir.join(file_name))
+        #     zip_path_i.close()
+        # except FileNotFoundError:
+        #     print('archive is bad')
     
 def sort_extension(path_i):
     extension = path_i.split('.')[-1]
@@ -65,7 +66,7 @@ def sort_extension(path_i):
             return key
        
     list_unknown_extension.add(extension)
-    return list_data_extension, list_unknown_extension
+    return 'other'
     
 
 def del_empty_data(path_i):
@@ -87,5 +88,17 @@ def recursion_folder(root_path, sub_path=None):
             move_data(path_i, root_path, name_category)
             
     return list_type_data, list_data_extension, list_unknown_extension
-    
-print(recursion_folder('E:\\HOME_WORK - PYTHON\\ДЗ модуль №6\\Всякая всячина'))
+
+
+def main():
+    try:
+        path = sys.argv[1]
+    except IndexError:
+        return "Take a path to folder as param"
+    if not os.path.exists(path):
+        return f"Path {path} does not axist"
+    return recursion_folder(path)
+
+
+if __name__ == '__main__':
+    print(main())
